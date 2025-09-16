@@ -16,6 +16,7 @@ export class AuthService {
 
   async signup(name: string, email: string, password: string) {
     const existing = await this.prisma.user.findUnique({ where: { email } })
+
     if (existing) throw new BadRequestException('Email já cadastrado')
 
     const hash = await bcrypt.hash(password, 10)
@@ -39,7 +40,7 @@ export class AuthService {
   private generateToken(userId: number, email: string) {
     const payload = { sub: userId, email }
     return {
-      access_token: this.jwtService.sign(payload)
+      accessToken: this.jwtService.sign(payload)
     }
   }
 }
