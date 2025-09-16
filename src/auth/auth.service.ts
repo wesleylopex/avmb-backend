@@ -24,7 +24,7 @@ export class AuthService {
       data: { name, email, password: hash }
     })
 
-    return this.generateToken(user.id, user.email)
+    return this.generateToken(user.id, user.name, user.email)
   }
 
   async login(email: string, password: string) {
@@ -34,11 +34,11 @@ export class AuthService {
     const match = await bcrypt.compare(password, user.password)
     if (!match) throw new UnauthorizedException('Credenciais inválidas')
 
-    return this.generateToken(user.id, user.email)
+    return this.generateToken(user.id, user.name, user.email)
   }
 
-  private generateToken(userId: number, email: string) {
-    const payload = { sub: userId, email }
+  private generateToken(userId: number, name: string, email: string) {
+    const payload = { sub: userId, name, email }
     return {
       accessToken: this.jwtService.sign(payload)
     }
