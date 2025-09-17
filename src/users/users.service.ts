@@ -24,6 +24,13 @@ export class UsersService {
     return `This action updates a #${id} user`
   }
 
+  updateStatus(id: number, status: 'approved' | 'rejected' | 'pending') {
+    return this.prismaService.user.update({
+      where: { id },
+      data: { status }
+    })
+  }
+
   remove(id: number) {
     return `This action removes a #${id} user`
   }

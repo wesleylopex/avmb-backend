@@ -35,6 +35,14 @@ export class UsersController {
     return this.usersService.update(+id, updateUserDto)
   }
 
+  @Patch(':id/status')
+  updateStatus(
+    @Param('id') id: number,
+    @Body('status') status: 'approved' | 'rejected' | 'pending'
+  ) {
+    return this.usersService.updateStatus(+id, status)
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id)
