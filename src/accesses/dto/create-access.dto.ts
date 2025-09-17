@@ -1,1 +1,5 @@
-export class CreateAccessDto {}
+export class CreateAccessDto {
+  userId: number
+  resourceId: number
+  expiresAt: string
+}

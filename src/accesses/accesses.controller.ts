@@ -5,19 +5,38 @@ import {
   Body,
   Patch,
   Param,
-  Delete
+  Delete,
+  Req,
+  UseGuards
 } from '@nestjs/common'
+import { Request } from 'express'
+import { AuthGuard } from '@nestjs/passport'
 import { AccessesService } from './accesses.service'
 import { CreateAccessDto } from './dto/create-access.dto'
 import { UpdateAccessDto } from './dto/update-access.dto'
+import { JwtPayload } from './jwt-payload.interface'
 
 @Controller('accesses')
 export class AccessesController {
   constructor(private readonly accessesService: AccessesService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
-  create(@Body() createAccessDto: CreateAccessDto) {
-    return this.accessesService.create(createAccessDto)
+  create(
+    @Body() createAccess: CreateAccessDto,
+    @Req() req: Request & { user: JwtPayload }
+  ) {
+    const grantedBy = +req.user.userId
+
+    const expiresAt = new Date(createAccess.expiresAt).toISOString().toString()
+
+    return this.accessesService.create(
+      {
+        ...createAccess,
+        expiresAt: expiresAt
+      },
+      grantedBy
+    )
   }
 
   @Get()

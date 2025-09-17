@@ -7,8 +7,20 @@ import { PrismaService } from 'src/prisma/prisma.service'
 export class AccessesService {
   constructor(private prismaService: PrismaService) {}
 
-  create(createAccessDto: CreateAccessDto) {
-    return 'This action adds a new access'
+  create(createAccessDto: CreateAccessDto, grantedBy: number) {
+    return this.prismaService.access.create({
+      data: {
+        userId: createAccessDto.userId,
+        resourceId: createAccessDto.resourceId,
+        grantedBy,
+        expiresAt: createAccessDto.expiresAt
+      },
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+        resource: true,
+        grantedByUser: { select: { id: true, name: true, email: true } }
+      }
+    })
   }
 
   findAll() {
