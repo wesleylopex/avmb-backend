@@ -1,5 +1,7 @@
-import { Body, Controller, Post } from '@nestjs/common'
+import { Body, Controller, Post, Get, UseGuards, Req } from '@nestjs/common'
+import { AuthGuard } from '@nestjs/passport'
 import { AuthService } from './auth.service'
+import { JwtPayload } from 'src/accesses/jwt-payload.interface'
 
 @Controller('auth')
 export class AuthController {
@@ -17,5 +19,12 @@ export class AuthController {
   @Post('login')
   login(@Body('email') email: string, @Body('password') password: string) {
     return this.authService.login(email, password)
+  }
+
+  @Get('me')
+  @UseGuards(AuthGuard('jwt'))
+  getMe(@Req() req: Request & { user: JwtPayload }) {
+    const userId = +req.user.userId
+    return this.authService.getMe(userId)
   }
 }
