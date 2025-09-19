@@ -54,7 +54,8 @@ export class AuthService {
                 slug: true
               }
             },
-            expiresAt: true
+            expiresAt: true,
+            revokedAt: true
           }
         }
       }
@@ -67,7 +68,12 @@ export class AuthService {
     const now = new Date()
 
     // Filtrar acessos ainda válidos
-    const validAccesses = user.accesses.filter(a => new Date(a.expiresAt) > now)
+    const validAccesses = user.accesses.filter(a => {
+      const notExpired = new Date(a.expiresAt) > now
+      const notRevoked = !a.revokedAt
+
+      return notExpired && notRevoked
+    })
 
     // Remover duplicatas de recurso (se houver) e pegar o com maior expiresAt
     const resourceMap = new Map<

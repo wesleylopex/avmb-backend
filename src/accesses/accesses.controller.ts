@@ -58,4 +58,14 @@ export class AccessesController {
   remove(@Param('id') id: string) {
     return this.accessesService.remove(+id)
   }
+
+  @Post('revoke/:id')
+  revoke(@Param('id') id: number) {
+    return this.accessesService.revoke(+id)
+  }
+
+  @Get('user/:id')
+  accessesByUser(@Param('id') id: number) {
+    return this.accessesService.accessesByUser(+id)
+  }
 }

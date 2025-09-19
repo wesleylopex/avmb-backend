@@ -44,4 +44,28 @@ export class AccessesService {
   remove(id: number) {
     return `This action removes a #${id} access`
   }
+
+  revoke(id: number) {
+    const revokedAt = new Date()
+    return this.prismaService.access.update({
+      where: { id },
+      data: { revokedAt },
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+        resource: true,
+        grantedByUser: { select: { id: true, name: true, email: true } }
+      }
+    })
+  }
+
+  accessesByUser(id: number) {
+    return this.prismaService.access.findMany({
+      where: { userId: id },
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+        resource: true,
+        grantedByUser: { select: { id: true, name: true, email: true } }
+      }
+    })
+  }
 }
