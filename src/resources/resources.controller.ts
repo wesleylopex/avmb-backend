@@ -5,12 +5,15 @@ import {
   Body,
   Patch,
   Param,
-  Delete
+  Delete,
+  UseGuards
 } from '@nestjs/common'
 import { ResourcesService } from './resources.service'
 import { CreateResourceDto } from './dto/create-resource.dto'
 import { UpdateResourceDto } from './dto/update-resource.dto'
+import { AuthGuard } from '@nestjs/passport'
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('resources')
 export class ResourcesController {
   constructor(private readonly resourcesService: ResourcesService) {}

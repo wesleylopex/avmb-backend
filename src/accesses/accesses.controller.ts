@@ -16,11 +16,11 @@ import { CreateAccessDto } from './dto/create-access.dto'
 import { UpdateAccessDto } from './dto/update-access.dto'
 import { JwtPayload } from './jwt-payload.interface'
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('accesses')
 export class AccessesController {
   constructor(private readonly accessesService: AccessesService) {}
 
-  @UseGuards(AuthGuard('jwt'))
   @Post()
   create(
     @Body() createAccess: CreateAccessDto,
